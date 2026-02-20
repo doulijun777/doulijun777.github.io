@@ -1,29 +1,834 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Welcome - Lijun</title>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Lijun Dou — CV</title>
   <style>
+    :root {
+      --hdr-a:   #1c0d58;
+      --hdr-b:   #3a28c0;
+      --hdr-c:   #2e72e8;
+      --purple:  #7c3aed;
+      --violet:  #5b21b6;
+      --cyan:    #06b6d4;
+      --sky:     #38bdf8;
+      --rose:    #e879f9;
+      --bg:      #f8f7ff;
+      --panel:   #f2efff;
+      --border:  #ddd6fe;
+      --text:    #1e1047;
+      --muted:   #6b5e8e;
+      --white:   #ffffff;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
     body {
-      font-family: Arial, sans-serif;
-      background-color: #f2f2f2;
-      text-align: center;
-      padding: 100px;
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      background: linear-gradient(160deg, #e9e4ff 0%, #f3f0ff 45%, #e4f0ff 100%);
+      color: var(--text);
+      line-height: 1.65;
+      font-size: 14px;
+      min-height: 100vh;
     }
-    h1 {
-      color: #333;
-      font-size: 48px;
+
+    a { color: var(--purple); text-decoration: none; }
+    a:hover { text-decoration: underline; color: var(--cyan); }
+
+    .page {
+      max-width: 970px;
+      margin: 36px auto;
+      background: var(--white);
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 8px 48px rgba(91,33,182,0.15), 0 2px 12px rgba(0,0,0,0.07);
+      border: 1px solid var(--border);
     }
-    p {
-      color: #555;
-      font-size: 24px;
+
+    /* ───────────── HEADER ───────────── */
+    .header {
+      background: linear-gradient(130deg, var(--hdr-a) 0%, var(--hdr-b) 45%, var(--hdr-c) 100%);
+      padding: 42px 46px 34px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Neural-network SVG sits behind everything */
+    .neural-bg {
+      position: absolute;
+      inset: 0;
+      width: 100%; height: 100%;
+      pointer-events: none;
+      opacity: 0.45;
+    }
+
+    .n-line { stroke: rgba(160,140,255,0.35); stroke-width: 0.8; fill: none; }
+    .n-dot  { fill: rgba(180,160,255,0.55); }
+    .n-dot-hi { fill: rgba(6,182,212,0.7); }
+
+    @keyframes npulse {
+      0%,100% { opacity: 0.5; r: 4; }
+      50%      { opacity: 1.0; r: 5.5; }
+    }
+    @keyframes npulse-hi {
+      0%,100% { opacity: 0.7; r: 5; }
+      50%      { opacity: 1.0; r: 7; }
+    }
+    .pulse      { animation: npulse    3s ease-in-out infinite; }
+    .pulse-hi   { animation: npulse-hi 2.4s ease-in-out infinite; }
+    .pulse2     { animation: npulse    4.2s ease-in-out infinite 1s; }
+    .pulse3     { animation: npulse    3.7s ease-in-out infinite 0.5s; }
+
+    /* Soft radial glow top-right */
+    .header::after {
+      content: '';
+      position: absolute; right: -60px; top: -60px;
+      width: 280px; height: 280px; border-radius: 50%;
+      background: radial-gradient(circle, rgba(100,70,240,0.22) 0%, transparent 68%);
+      pointer-events: none;
+    }
+
+    .header-content {
+      position: relative; z-index: 1;
+    }
+
+    .header-content h1 {
+      font-size: 2.2rem; font-weight: 800;
+      color: var(--white); letter-spacing: 0.5px;
+      text-shadow: 0 1px 8px rgba(0,0,0,0.4);
+      margin-bottom: 2px;
+    }
+
+    .h1-sub {
+      font-size: 0.82rem; color: rgba(196,181,253,0.85);
+      font-weight: 400; margin-bottom: 11px;
+      letter-spacing: 0.2px;
+    }
+
+    /* Keyword chips — directly under name */
+    .kw-row { display: flex; flex-wrap: wrap; gap: 6px; margin: 10px 0 14px; }
+    .kw {
+      background: rgba(255,255,255,0.13);
+      border: 1px solid rgba(255,255,255,0.28);
+      border-radius: 20px; padding: 4px 14px;
+      font-size: 0.76rem; font-weight: 600;
+      color: rgba(255,255,255,0.95);
+      letter-spacing: 0.1px;
+      backdrop-filter: blur(4px);
+    }
+
+    .contact-grid {
+      display: flex; flex-wrap: wrap; gap: 8px 24px;
+      font-size: 0.82rem; color: rgba(255,255,255,0.72);
+    }
+
+    .contact-item { display: flex; align-items: center; gap: 7px; }
+    .contact-item a { color: #a5f3fc; }
+    .contact-item a:hover { color: #e879f9; text-decoration: underline; }
+
+    .c-icon {
+      width: 15px; height: 15px;
+      flex-shrink: 0;
+      display: inline-flex; align-items: center; justify-content: center;
+    }
+
+    /* ───────────── BODY ───────────── */
+    .body { display: grid; grid-template-columns: 265px 1fr; }
+
+    /* ───────────── SIDEBAR ───────────── */
+    .sidebar {
+      background: var(--panel);
+      border-right: 1px solid var(--border);
+      padding: 28px 20px;
+    }
+
+    .sb-section { margin-bottom: 24px; }
+
+    .sb-title {
+      font-size: 0.62rem; font-weight: 800;
+      letter-spacing: 2.5px; text-transform: uppercase;
+      color: var(--violet);
+      margin-bottom: 12px; padding-bottom: 6px;
+      border-bottom: 2px solid var(--cyan);
+    }
+
+    /* Skill bars */
+    .skill-item { margin-bottom: 10px; }
+    .skill-row {
+      display: flex; justify-content: space-between;
+      font-size: 0.82rem; margin-bottom: 4px; font-weight: 500;
+    }
+    .skill-row .pct { font-size: 0.72rem; color: var(--muted); }
+    .bar-bg { height: 5px; background: var(--border); border-radius: 4px; overflow: hidden; }
+    .bar-fg {
+      height: 100%;
+      background: linear-gradient(90deg, var(--purple), var(--cyan));
+      border-radius: 4px;
+    }
+
+    /* Tags */
+    .tags { display: flex; flex-wrap: wrap; gap: 5px; }
+    .tag {
+      background: var(--white); border: 1px solid var(--border);
+      border-radius: 12px; padding: 3px 9px;
+      font-size: 0.76rem; color: var(--violet); font-weight: 500;
+    }
+    .tag.teal {
+      border-color: #a5f3fc; color: #0e7490; background: #ecfeff;
+    }
+    .tag.pink {
+      border-color: #f5d0fe; color: #86198f; background: #fdf4ff;
+    }
+
+    /* Stats */
+    .stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 7px; }
+    .stat-box {
+      background: var(--white); border: 1px solid var(--border);
+      border-radius: 10px; padding: 9px 6px; text-align: center;
+    }
+    .stat-num { font-size: 1.5rem; font-weight: 800; color: var(--purple); line-height: 1; }
+    .stat-label { font-size: 0.67rem; color: var(--muted); margin-top: 3px; }
+
+    /* ───────────── MAIN ───────────── */
+    .main { padding: 28px 36px; }
+    .section { margin-bottom: 26px; }
+
+    .section-title {
+      font-size: 0.62rem; font-weight: 800;
+      letter-spacing: 2.5px; text-transform: uppercase;
+      color: var(--violet);
+      margin-bottom: 12px; padding-bottom: 6px;
+      border-bottom: 2px solid var(--cyan);
+      display: flex; align-items: center; gap: 7px;
+    }
+
+    /* Research interests */
+    .interest-list { display: flex; flex-direction: column; gap: 6px; }
+    .interest-item {
+      display: flex; align-items: flex-start; gap: 10px;
+      background: linear-gradient(90deg, #f0ebff, transparent 70%);
+      border-left: 3px solid var(--purple);
+      border-radius: 0 8px 8px 0;
+      padding: 8px 12px;
+      font-size: 0.86rem;
+    }
+    .interest-item .ic { font-size: 1rem; flex-shrink: 0; margin-top: 1px; }
+
+    /* Timeline */
+    .timeline { position: relative; padding-left: 20px; }
+    .timeline::before {
+      content: '';
+      position: absolute; left: 6px; top: 6px; bottom: 6px;
+      width: 2px;
+      background: linear-gradient(to bottom, var(--purple), #c4b5fd);
+      border-radius: 2px;
+    }
+
+    .entry { position: relative; margin-bottom: 20px; }
+    .entry::before {
+      content: '';
+      position: absolute; left: -16px; top: 6px;
+      width: 10px; height: 10px; border-radius: 50%;
+      background: var(--cyan);
+      border: 2px solid var(--white);
+      box-shadow: 0 0 0 2px var(--cyan);
+    }
+
+    .entry-header {
+      display: flex; justify-content: space-between;
+      align-items: flex-start; flex-wrap: wrap; gap: 4px;
+    }
+
+    .entry-title { font-size: 0.93rem; font-weight: 700; color: var(--violet); }
+    .entry-org   { font-size: 0.82rem; color: var(--muted); margin-top: 2px; }
+    .entry-date  {
+      background: var(--violet); color: var(--white);
+      font-size: 0.7rem; font-weight: 600;
+      padding: 3px 9px; border-radius: 12px; white-space: nowrap;
+    }
+    .entry-desc { font-size: 0.83rem; color: #3b3166; margin-top: 7px; }
+    .entry-desc ul { padding-left: 16px; }
+    .entry-desc li { margin-bottom: 3px; }
+
+    /* Publications */
+    .pub-list { list-style: none; counter-reset: pub-counter; }
+    .pub-item {
+      counter-increment: pub-counter;
+      position: relative;
+      padding: 9px 12px 9px 38px;
+      margin-bottom: 6px;
+      background: var(--panel);
+      border-radius: 8px;
+      font-size: 0.82rem; line-height: 1.55;
+      border-left: 3px solid transparent;
+      transition: border-color 0.2s, background 0.2s;
+    }
+    .pub-item:hover { border-left-color: var(--purple); background: #ede9fe; }
+
+    .pub-item::before {
+      content: counter(pub-counter);
+      position: absolute; left: 10px; top: 9px;
+      background: var(--purple); color: var(--white);
+      font-size: 0.69rem; font-weight: 700;
+      width: 19px; height: 19px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      line-height: 19px; text-align: center;
+    }
+
+    .pub-item strong { color: var(--violet); }
+    .pub-journal { font-style: italic; color: var(--cyan); }
+    .pub-status {
+      display: inline-flex; align-items: center; gap: 3px;
+      background: #e0f2fe; border: 1px solid #38bdf8;
+      color: #075985; border-radius: 10px;
+      padding: 1px 8px; font-size: 0.7rem; font-weight: 600;
+      margin-left: 4px; white-space: nowrap;
+    }
+
+    /* Conferences */
+    .conf-list { display: flex; flex-direction: column; gap: 8px; }
+    .conf-item {
+      display: flex; gap: 12px; align-items: flex-start;
+      background: var(--panel); border-radius: 10px;
+      padding: 11px 14px;
+      border-left: 4px solid var(--purple);
+    }
+    .conf-icon { font-size: 1.4rem; flex-shrink: 0; margin-top: 1px; }
+    .conf-body { flex: 1; }
+    .conf-type {
+      font-size: 0.66rem; font-weight: 700; letter-spacing: 1.2px;
+      text-transform: uppercase; color: var(--cyan); margin-bottom: 3px;
+    }
+    .conf-title { font-size: 0.86rem; font-weight: 600; color: var(--violet); font-style: italic; }
+    .conf-venue { font-size: 0.78rem; color: var(--muted); margin-top: 3px; }
+    .conf-year  {
+      flex-shrink: 0;
+      background: var(--purple); color: var(--white);
+      font-size: 0.73rem; font-weight: 700;
+      padding: 3px 10px; border-radius: 12px; height: fit-content;
+    }
+
+    /* Footer */
+    .footer {
+      background: var(--hdr-a);
+      color: rgba(255,255,255,0.45);
+      text-align: center; font-size: 0.73rem; padding: 12px;
+    }
+    .footer a { color: #a5f3fc; }
+
+    @media (max-width: 700px) {
+      .header { padding: 28px 20px; }
+      .header-top { flex-direction: column; gap: 14px; }
+      .body { grid-template-columns: 1fr; }
+      .sidebar { border-right: none; border-bottom: 1px solid var(--border); }
+      .main { padding: 22px 16px; }
     }
   </style>
 </head>
 <body>
-  <h1>Welcome!</h1>
-  <p>Lijun's Personal Webpage</p>
+<div class="page">
+
+  <!-- ══════════════ HEADER ══════════════ -->
+  <div class="header">
+
+    <!-- ── Background: Brain (left) → Neural Network (right) ── -->
+    <svg class="neural-bg" viewBox="0 0 960 190" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+
+      <!-- ════ BRAIN SILHOUETTE (left side, ~x 30–230) ════ -->
+      <!-- Main cerebrum outline -->
+      <path d="M 48 150  C 38 135, 32 115, 36 95  C 40 75, 52 58, 68 48
+               C 84 38, 102 35, 120 42  C 130 28, 148 20, 166 24
+               C 184 28, 196 44, 194 62  C 204 58, 216 60, 220 72
+               C 224 84, 216 96, 206 100  C 212 110, 212 124, 204 132
+               C 196 140, 184 143, 174 138  C 168 148, 156 155, 142 153
+               C 130 158, 116 153, 106 144  C 96 152, 82 154, 70 146  C 60 152, 50 148, 48 150 Z"
+        fill="none" stroke="rgba(180,155,255,0.22)" stroke-width="1.8" stroke-linejoin="round"/>
+      <!-- Cerebellum (lower right of brain) -->
+      <path d="M 172 138  C 182 132, 196 136, 202 146  C 208 156, 202 166, 192 168  C 182 170, 172 163, 170 153  C 168 146, 170 140, 172 138 Z"
+        fill="none" stroke="rgba(180,155,255,0.18)" stroke-width="1.4"/>
+      <!-- Brain stem -->
+      <path d="M 118 153  C 115 162, 114 172, 116 182" fill="none" stroke="rgba(180,155,255,0.18)" stroke-width="2" stroke-linecap="round"/>
+      <!-- Gyri (brain folds) — give texture -->
+      <path d="M 60 80  C 72 68, 90 64, 106 70" fill="none" stroke="rgba(180,155,255,0.14)" stroke-width="1.2" stroke-linecap="round"/>
+      <path d="M 108 70  C 120 76, 130 88, 132 102" fill="none" stroke="rgba(180,155,255,0.14)" stroke-width="1.2" stroke-linecap="round"/>
+      <path d="M 55 108  C 68 96, 86 93, 100 98" fill="none" stroke="rgba(180,155,255,0.14)" stroke-width="1.2" stroke-linecap="round"/>
+      <path d="M 100 98  C 113 103, 122 114, 120 128" fill="none" stroke="rgba(180,155,255,0.14)" stroke-width="1.2" stroke-linecap="round"/>
+      <path d="M 76 56  C 90 50, 108 50, 122 58" fill="none" stroke="rgba(180,155,255,0.12)" stroke-width="1" stroke-linecap="round"/>
+      <!-- Neuron soma dots inside brain -->
+      <circle cx="90" cy="78"  r="2.5" fill="rgba(6,182,212,0.45)" class="pulse"/>
+      <circle cx="118" cy="65" r="2"   fill="rgba(6,182,212,0.40)" class="pulse2"/>
+      <circle cx="148" cy="75" r="2.5" fill="rgba(6,182,212,0.45)" class="pulse3"/>
+      <circle cx="78"  cy="110" r="2"  fill="rgba(6,182,212,0.38)" class="pulse"/>
+      <circle cx="112" cy="118" r="2.5" fill="rgba(6,182,212,0.45)" class="pulse2"/>
+      <circle cx="148" cy="108" r="2"  fill="rgba(6,182,212,0.40)" class="pulse3"/>
+      <!-- Synaptic connections inside brain -->
+      <line x1="90" y1="78"  x2="118" y2="65"  stroke="rgba(150,120,255,0.18)" stroke-width="0.8"/>
+      <line x1="118" y1="65" x2="148" y2="75"  stroke="rgba(150,120,255,0.18)" stroke-width="0.8"/>
+      <line x1="90"  y1="78"  x2="78" y2="110" stroke="rgba(150,120,255,0.15)" stroke-width="0.8"/>
+      <line x1="78"  y1="110" x2="112" y2="118" stroke="rgba(150,120,255,0.18)" stroke-width="0.8"/>
+      <line x1="112" y1="118" x2="148" y2="108" stroke="rgba(150,120,255,0.18)" stroke-width="0.8"/>
+      <line x1="148" y1="75"  x2="148" y2="108" stroke="rgba(150,120,255,0.15)" stroke-width="0.8"/>
+
+      <!-- ════ BRIDGE: brain to network (axon-like lines) ════ -->
+      <line x1="200" y1="60"  x2="360" y2="35"  stroke="rgba(130,100,255,0.22)" stroke-width="0.9" stroke-dasharray="4 3"/>
+      <line x1="206" y1="95"  x2="360" y2="95"  stroke="rgba(130,100,255,0.22)" stroke-width="0.9" stroke-dasharray="4 3"/>
+      <line x1="200" y1="130" x2="360" y2="155" stroke="rgba(130,100,255,0.22)" stroke-width="0.9" stroke-dasharray="4 3"/>
+
+      <!-- ════ DEEP LEARNING NETWORK (right side, x 360–920) ════ -->
+      <!-- L1→L2 -->
+      <line class="n-line" x1="360" y1="35"  x2="490" y2="22"/><line class="n-line" x1="360" y1="35"  x2="490" y2="68"/>
+      <line class="n-line" x1="360" y1="35"  x2="490" y2="115"/><line class="n-line" x1="360" y1="35"  x2="490" y2="160"/>
+      <line class="n-line" x1="360" y1="95"  x2="490" y2="22"/><line class="n-line" x1="360" y1="95"  x2="490" y2="68"/>
+      <line class="n-line" x1="360" y1="95"  x2="490" y2="115"/><line class="n-line" x1="360" y1="95"  x2="490" y2="160"/>
+      <line class="n-line" x1="360" y1="155" x2="490" y2="22"/><line class="n-line" x1="360" y1="155" x2="490" y2="68"/>
+      <line class="n-line" x1="360" y1="155" x2="490" y2="115"/><line class="n-line" x1="360" y1="155" x2="490" y2="160"/>
+      <!-- L2→L3 -->
+      <line class="n-line" x1="490" y1="22"  x2="620" y2="42"/><line class="n-line" x1="490" y1="22"  x2="620" y2="95"/>
+      <line class="n-line" x1="490" y1="22"  x2="620" y2="148"/>
+      <line class="n-line" x1="490" y1="68"  x2="620" y2="42"/><line class="n-line" x1="490" y1="68"  x2="620" y2="95"/>
+      <line class="n-line" x1="490" y1="68"  x2="620" y2="148"/>
+      <line class="n-line" x1="490" y1="115" x2="620" y2="42"/><line class="n-line" x1="490" y1="115" x2="620" y2="95"/>
+      <line class="n-line" x1="490" y1="115" x2="620" y2="148"/>
+      <line class="n-line" x1="490" y1="160" x2="620" y2="42"/><line class="n-line" x1="490" y1="160" x2="620" y2="95"/>
+      <line class="n-line" x1="490" y1="160" x2="620" y2="148"/>
+      <!-- L3→L4 -->
+      <line class="n-line" x1="620" y1="42"  x2="760" y2="22"/><line class="n-line" x1="620" y1="42"  x2="760" y2="68"/>
+      <line class="n-line" x1="620" y1="42"  x2="760" y2="115"/><line class="n-line" x1="620" y1="42"  x2="760" y2="160"/>
+      <line class="n-line" x1="620" y1="95"  x2="760" y2="22"/><line class="n-line" x1="620" y1="95"  x2="760" y2="68"/>
+      <line class="n-line" x1="620" y1="95"  x2="760" y2="115"/><line class="n-line" x1="620" y1="95"  x2="760" y2="160"/>
+      <line class="n-line" x1="620" y1="148" x2="760" y2="22"/><line class="n-line" x1="620" y1="148" x2="760" y2="68"/>
+      <line class="n-line" x1="620" y1="148" x2="760" y2="115"/><line class="n-line" x1="620" y1="148" x2="760" y2="160"/>
+      <!-- L4→L5 -->
+      <line class="n-line" x1="760" y1="22"  x2="900" y2="42"/><line class="n-line" x1="760" y1="22"  x2="900" y2="95"/>
+      <line class="n-line" x1="760" y1="22"  x2="900" y2="148"/>
+      <line class="n-line" x1="760" y1="68"  x2="900" y2="42"/><line class="n-line" x1="760" y1="68"  x2="900" y2="95"/>
+      <line class="n-line" x1="760" y1="68"  x2="900" y2="148"/>
+      <line class="n-line" x1="760" y1="115" x2="900" y2="42"/><line class="n-line" x1="760" y1="115" x2="900" y2="95"/>
+      <line class="n-line" x1="760" y1="115" x2="900" y2="148"/>
+      <line class="n-line" x1="760" y1="160" x2="900" y2="42"/><line class="n-line" x1="760" y1="160" x2="900" y2="95"/>
+      <line class="n-line" x1="760" y1="160" x2="900" y2="148"/>
+      <!-- Nodes L1 -->
+      <circle class="n-dot pulse"  cx="360" cy="35"  r="4"/>
+      <circle class="n-dot-hi pulse-hi" cx="360" cy="95"  r="5.5"/>
+      <circle class="n-dot pulse2" cx="360" cy="155" r="4"/>
+      <!-- Nodes L2 -->
+      <circle class="n-dot pulse3" cx="490" cy="22"  r="3.5"/>
+      <circle class="n-dot pulse"  cx="490" cy="68"  r="4"/>
+      <circle class="n-dot pulse2" cx="490" cy="115" r="4"/>
+      <circle class="n-dot pulse3" cx="490" cy="160" r="3.5"/>
+      <!-- Nodes L3 -->
+      <circle class="n-dot-hi pulse-hi" cx="620" cy="42"  r="5"/>
+      <circle class="n-dot-hi pulse-hi" cx="620" cy="95"  r="6"/>
+      <circle class="n-dot-hi pulse-hi" cx="620" cy="148" r="5"/>
+      <!-- Nodes L4 -->
+      <circle class="n-dot pulse3" cx="760" cy="22"  r="3.5"/>
+      <circle class="n-dot pulse"  cx="760" cy="68"  r="4"/>
+      <circle class="n-dot pulse2" cx="760" cy="115" r="4"/>
+      <circle class="n-dot pulse3" cx="760" cy="160" r="3.5"/>
+      <!-- Nodes L5 -->
+      <circle class="n-dot pulse"  cx="900" cy="42"  r="4"/>
+      <circle class="n-dot-hi pulse-hi" cx="900" cy="95"  r="5.5"/>
+      <circle class="n-dot pulse2" cx="900" cy="148" r="4"/>
+    </svg>
+
+    <div class="header-content">
+        <h1>Lijun Dou &nbsp;豆丽君</h1>
+        <div class="h1-sub">Postdoctoral Fellow &nbsp;·&nbsp; Genomic Sciences &amp; Systems Biology, Cleveland Clinic Research</div>
+
+        <!-- Keywords — right under name, all same style -->
+        <div class="kw-row">
+          <span class="kw">🧠 Neuroscience</span>
+          <span class="kw">🔬 Bioinformatics</span>
+          <span class="kw">🤖 ML / Deep Learning</span>
+          <span class="kw">🧬 Genomics &amp; Multi-omics</span>
+          <span class="kw">◎ Systems Biology</span>
+          <span class="kw">🧫 Neurodegenerative Diseases</span>
+          <span class="kw">💊 Drug Repurposing</span>
+        </div>
+
+        <div class="contact-grid">
+          <div class="contact-item">
+            <span class="c-icon">📧</span>
+            <a href="mailto:doulijun777@gmail.com">doulijun777@gmail.com</a>
+          </div>
+          <div class="contact-item">
+            <span class="c-icon">📞</span>
+            <span>+1 (216) 239-8389</span>
+          </div>
+          <div class="contact-item">
+            <span class="c-icon">🏛️</span>
+            <span>Genomic Sciences and Systems Biology, Cleveland Clinic Research</span>
+          </div>
+          <!-- GitHub icon (official mark SVG) -->
+          <div class="contact-item">
+            <span class="c-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="rgba(255,255,255,0.75)">
+                <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/>
+              </svg>
+            </span>
+            <a href="https://github.com/doulijun777" target="_blank">github.com/doulijun777</a>
+          </div>
+          <!-- Google Scholar icon (graduation cap SVG) -->
+          <div class="contact-item">
+            <span class="c-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="rgba(255,255,255,0.75)">
+                <path d="M12 3 1 9l4 2.18V17h2v-4.82L9 13.4V17c0 2.21 1.343 4 3 4s3-1.79 3-4v-3.6l3-1.22V17h2v-5.82L23 9 12 3zm5.6 8L12 13.72 6.4 11 12 8.28 17.6 11z"/>
+              </svg>
+            </span>
+            <a href="https://scholar.google.com/citations?user=hI5Ne60AAAAJ" target="_blank">Google Scholar</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  <!-- ══════════════ BODY ══════════════ -->
+  <div class="body">
+
+    <!-- ════════ SIDEBAR ════════ -->
+    <aside class="sidebar">
+
+      <div class="sb-section">
+        <div class="sb-title">⚡ Research Impact</div>
+        <div class="stat-grid">
+          <div class="stat-box"><div class="stat-num">16+</div><div class="stat-label">Publications</div></div>
+          <div class="stat-box"><div class="stat-num">3</div><div class="stat-label">Under Review</div></div>
+          <div class="stat-box"><div class="stat-num">5+</div><div class="stat-label">Years Postdoc</div></div>
+          <div class="stat-box"><div class="stat-num">4</div><div class="stat-label">Conferences</div></div>
+        </div>
+      </div>
+
+      <div class="sb-section">
+        <div class="sb-title">💻 Programming</div>
+        <div class="skill-item">
+          <div class="skill-row"><span>Python</span><span class="pct">95%</span></div>
+          <div class="bar-bg"><div class="bar-fg" style="width:95%"></div></div>
+        </div>
+        <div class="skill-item">
+          <div class="skill-row"><span>R</span><span class="pct">92%</span></div>
+          <div class="bar-bg"><div class="bar-fg" style="width:92%"></div></div>
+        </div>
+        <div class="skill-item">
+          <div class="skill-row"><span>Shell / Linux / HPC</span><span class="pct">88%</span></div>
+          <div class="bar-bg"><div class="bar-fg" style="width:88%"></div></div>
+        </div>
+        <div class="skill-item">
+          <div class="skill-row"><span>PyTorch (ML / DL)</span><span class="pct">82%</span></div>
+          <div class="bar-bg"><div class="bar-fg" style="width:82%"></div></div>
+        </div>
+      </div>
+
+      <div class="sb-section">
+        <div class="sb-title">🔬 Single-Cell &amp; Genomics</div>
+        <div class="tags">
+          <span class="tag">snRNA-seq</span>
+          <span class="tag">snATAC-seq</span>
+          <span class="tag">Multiome</span>
+          <span class="tag">Spatial Transcriptomics</span>
+          <span class="tag">Trajectory Analysis</span>
+          <span class="tag">GWAS</span>
+          <span class="tag">xQTLs</span>
+          <span class="tag">Colocalization</span>
+          <span class="tag">CHIP-seq</span>
+        </div>
+      </div>
+
+      <div class="sb-section">
+        <div class="sb-title">🧠 Computational Methods</div>
+        <div class="tags">
+          <span class="tag pink">Network Medicine</span>
+          <span class="tag pink">Systems Biology</span>
+          <span class="tag pink">Protein Interactome</span>
+          <span class="tag pink">Multi-omics Integration</span>
+          <span class="tag pink">Deep Learning</span>
+          <span class="tag pink">Feature Embedding</span>
+          <span class="tag pink">Drug Repurposing</span>
+        </div>
+      </div>
+
+      <div class="sb-section">
+        <div class="sb-title">🧫 Disease Focus</div>
+        <div class="tags">
+          <span class="tag teal">Neuroscience</span>
+          <span class="tag teal">Alzheimer's (AD)</span>
+          <span class="tag teal">Parkinson's (PD)</span>
+          <span class="tag teal">ALS</span>
+          <span class="tag teal">TBI</span>
+          <span class="tag teal">Neurodegeneration</span>
+        </div>
+      </div>
+
+    </aside>
+
+    <!-- ════════ MAIN ════════ -->
+    <main class="main">
+
+      <div class="section">
+        <div class="section-title">🎯 Research Interests</div>
+        <div class="interest-list">
+          <div class="interest-item">
+            <span class="ic">🧬</span>
+            Integrative multi-omics analysis — including single-cell genomics and spatial transcriptomics — for mechanistic dissection of neurodegenerative diseases (AD, PD, ALS)
+          </div>
+          <div class="interest-item">
+            <span class="ic">🔗</span>
+            Synergistic pathological convergence and cross-disease interactions in neurodegeneration, including TBI-accelerated Alzheimer's pathology and shared molecular vulnerabilities across complex traits
+          </div>
+          <div class="interest-item">
+            <span class="ic">◎</span>
+            Network medicine and systems biology frameworks for disease module discovery, drug target prioritization, and therapeutic repurposing in neurodegeneration
+          </div>
+          <div class="interest-item">
+            <span class="ic">📊</span>
+            Large-scale multi-omics data integration — harmonizing genetics (GWAS / xQTLs), transcriptomics, and proteomics to uncover disease mechanisms at population and cellular resolution
+          </div>
+          <div class="interest-item">
+            <span class="ic">🤖</span>
+            Machine learning and deep learning models for genomic feature prediction, post-translational modification classification, and cell-type deconvolution
+          </div>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-title">💼 Professional Experience</div>
+        <div class="timeline">
+
+          <div class="entry">
+            <div class="entry-header">
+              <div>
+                <div class="entry-title">🔬 Postdoctoral Fellow — Neuroscience &amp; Bioinformatics</div>
+                <div class="entry-org">Genomic Sciences and Systems Biology, Cleveland Clinic Research &nbsp;·&nbsp; Advisor: Dr. Feixiong Cheng</div>
+              </div>
+              <div class="entry-date">May 2022 – Present</div>
+            </div>
+            <div class="entry-desc">
+              <ul>
+                <li>Multi-omics profiling of neurodegenerative diseases (AD, PD, ALS) using single-nucleus genomics and spatial transcriptomics.</li>
+                <li>Developed network-based systems genetics frameworks for disease module discovery and drug repurposing.</li>
+                <li>Led and co-authored high-impact manuscripts submitted to <em>Nature Communications</em>, <em>Nature Aging</em>, and <em>Nature Biomedical Engineering</em>.</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="entry">
+            <div class="entry-header">
+              <div>
+                <div class="entry-title">🤖 Postdoctoral Fellow — Machine Learning &amp; Bioinformatics</div>
+                <div class="entry-org">University of Electronic Science and Technology of China (UESTC)</div>
+              </div>
+              <div class="entry-date">Nov 2019 – Apr 2022</div>
+            </div>
+            <div class="entry-desc">
+              <ul>
+                <li>Applied feature embedding and deep learning to predict post-transcriptional modification sites from sequencing data.</li>
+                <li>Published multiple papers in leading bioinformatics journals on protein modification classification.</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="entry">
+            <div class="entry-header">
+              <div>
+                <div class="entry-title">🌏 Visiting Scholar</div>
+                <div class="entry-org">University of Electronic Science and Technology of China (UESTC)</div>
+              </div>
+              <div class="entry-date">Jul 2019 – Oct 2019</div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-title">🎓 Education</div>
+        <div class="timeline">
+
+          <div class="entry">
+            <div class="entry-header">
+              <div>
+                <div class="entry-title">Ph.D. in Atomic and Molecular Physics</div>
+                <div class="entry-org">🏛️ Institute of Modern Physics, Chinese Academy of Sciences, Lanzhou, China</div>
+              </div>
+              <div class="entry-date">Sep 2014 – Jun 2019</div>
+            </div>
+          </div>
+
+          <div class="entry">
+            <div class="entry-header">
+              <div>
+                <div class="entry-title">B.S. in Physics</div>
+                <div class="entry-org">🏛️ Northwest Normal University, Lanzhou, China</div>
+              </div>
+              <div class="entry-date">Sep 2010 – Jun 2014</div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-title">📄 Publications &nbsp;<small style="font-size:0.68rem;color:var(--muted);font-weight:400;letter-spacing:0">(# co-first &nbsp;* co-corresponding)</small></div>
+        <ol class="pub-list">
+
+          <li class="pub-item">
+            <strong>Lijun Dou</strong>; J. Chen; V. Kostenko; T. Niepokny; A. Chomyk; N.R. Zemke; <em>et al.</em>
+            Single-nucleus multiome analysis sheds molecular insights into glial activation, neuronal loss, and blood-brain barrier leakage in Amyotrophic Lateral Sclerosis brains.
+            <span class="pub-status">⏳ Under Review 2026</span>
+          </li>
+
+          <li class="pub-item">
+            S. Barker<sup>#</sup>; <strong>Lijun Dou<sup>#</sup></strong>; K. Chaubey; S. Corella; <em>et al.</em>
+            Acetylated-tau causes traumatic brain injury-induced acceleration of Alzheimer's disease.
+            <span class="pub-status">⏳ Under Review 2026</span>
+          </li>
+
+          <li class="pub-item">
+            J. Xu<sup>#</sup>; Y. Zhou<sup>#</sup>; N. Lorincz-Comi<sup>#</sup>; <strong>Lijun Dou<sup>#</sup></strong>; Y. Hou<sup>#</sup>; Y. Qiu<sup>#</sup>; <em>et al.</em>
+            A Scalable Human Brain Cell Atlas Foundation Model Dissects the Cellular Immune Codes and Cognitive Resilience.
+            <span class="pub-status">⏳ Under Review 2026</span>
+          </li>
+
+          <li class="pub-item">
+            <strong>Lijun Dou</strong>; Z. Xu; J. Xu; C. Zang; C. Su; A.A. Pieper; J.B. Leverenz; F. Wang; X. Zhu; J. Cummings; F. Cheng.
+            A network-based systems genetics framework identifies pathobiology and drug repurposing in Parkinson's disease.
+            <span class="pub-journal">npj Parkinson's Disease</span>, 2025, <strong>11</strong>, 22.
+          </li>
+
+          <li class="pub-item">
+            <strong>Lijun Dou</strong>; J. Xu; Y. Hou; F. Cheng.
+            A deep learning-based deconvolution framework identifies human brain cell-type specific eQTLs and pathobiology in Alzheimer's disease.
+            <span class="pub-journal">Alzheimer's &amp; Dementia</span>, 2025, <strong>20</strong>, S1.
+          </li>
+
+          <li class="pub-item">
+            X. Fu; Y. Yuan; H. Qiu; <em>et al.</em> (incl. <strong>Lijun Dou</strong>).
+            AGF-PPIS: A protein-protein interaction site predictor based on attention mechanism and graph convolutional networks.
+            <span class="pub-journal">Methods</span>, 2024, 222, 142.
+          </li>
+
+          <li class="pub-item">
+            M. Wang; Z. Song; S. Lai; F. Tang; <strong>Lijun Dou*</strong>; F. Yang.
+            Depression-associated gut microbes, metabolites and clinical trials.
+            <span class="pub-journal">Frontiers in Microbiology</span>, 2024, 15:1292004.
+          </li>
+
+          <li class="pub-item">
+            Z. Zhang; F. Cui; W. Su; <strong>Lijun Dou</strong>; A. Xu; C. Cao; Q. Zou.
+            webSCST: an interactive web application for single-cell RNA-seq data and spatial transcriptomic data integration.
+            <span class="pub-journal">Bioinformatics</span>, 2022, <strong>38</strong>(13): 3488–3489.
+          </li>
+
+          <li class="pub-item">
+            <strong>Lijun Dou</strong>; L. Xu; Q. Zou.
+            iKcr_CNN: A novel computational tool for imbalance classification of human nonhistone crotonylation sites based on convolutional neural networks with focal loss.
+            <span class="pub-journal">Computational and Structural Biotechnology Journal</span>, 2022, <strong>20</strong>, 3268–3279.
+          </li>
+
+          <li class="pub-item">
+            <strong>Lijun Dou<sup>#</sup></strong>; F. Yang<sup>#</sup>; L. Xu*; Q. Zou*.
+            A comprehensive review of the imbalance classification of protein post-translational modifications.
+            <span class="pub-journal">Briefings in Bioinformatics</span>, 2021, <strong>22</strong>: 1–18.
+          </li>
+
+          <li class="pub-item">
+            <strong>Lijun Dou<sup>#</sup></strong>; W. Zhou<sup>#</sup>; L. Zhang; L. Xu*; K. Han*.
+            Accurate identification of RNA D modification using multiple features.
+            <span class="pub-journal">RNA Biology</span>, 2021, <strong>18</strong>: 2236–2246.
+          </li>
+
+          <li class="pub-item">
+            <strong>Lijun Dou<sup>#</sup></strong>; X. Li<sup>#</sup>; L. Zhang; H. Xiang; L. Xu*.
+            iGlu_AdaBoost: Identification of Lysine Glutarylation Using AdaBoost Classifier.
+            <span class="pub-journal">Journal of Proteome Research</span>, 2021, <strong>20</strong>: 191–201.
+          </li>
+
+          <li class="pub-item">
+            <strong>Lijun Dou<sup>#</sup></strong>; X. Li<sup>#</sup>; H. Ding; L. Xu*; H. Xiang*.
+            Prediction of m5C Modifications in RNA Sequences by Combining Multiple Sequence Features.
+            <span class="pub-journal">Molecular Therapy &amp; Nucleic Acids</span>, 2020, <strong>21</strong>: 332–342.
+          </li>
+
+          <li class="pub-item">
+            <strong>Lijun Dou</strong>; R. Jin*; R. Sun; L. Xie; Z. Huang; J. Li; X. Ma*; X. Gao*.
+            Relativistic eigenchannel R-matrix studies of the strong intrashell electron correlations in highly charged Ar<sup>13+</sup> ions.
+            <span class="pub-journal">Physical Review A</span>, 2020, <strong>101</strong>: 032508.
+          </li>
+
+          <li class="pub-item">
+            <strong>Lijun Dou</strong>; L. Xie*; Z. Huang; W. Wen; D. Zhang; C. Dong; X. Ma*.
+            Theoretical investigation of electron-ion recombination processes of Li-like tungsten ions.
+            <span class="pub-journal">Journal of Quantitative Spectroscopy and Radiative Transfer</span>, 2018, <strong>220</strong>: 162–171.
+          </li>
+
+          <li class="pub-item">
+            <strong>Lijun Dou</strong>; L. Xie*; D. Zhang; C. Dong; W. Wen; Z. Huang; X. Ma.
+            Theoretical study of the dielectronic recombination process of Li-like Xe<sup>51+</sup> ions.
+            <span class="pub-journal">European Physical Journal D</span>, 2017, <strong>71</strong>: 128.
+          </li>
+
+        </ol>
+      </div>
+
+      <div class="section">
+        <div class="section-title">🎤 Presentations &amp; Conferences</div>
+        <div class="conf-list">
+
+          <!-- ASHG 2025 -->
+          <div class="conf-item">
+            <div class="conf-icon">🧬</div>
+            <div class="conf-body">
+              <div class="conf-type">📌 Poster Presentation</div>
+              <div class="conf-title">Acetylated-tau causes traumatic brain injury-induced acceleration of Alzheimer's disease</div>
+              <div class="conf-venue">American Society of Human Genetics (ASHG) Annual Meeting &nbsp;·&nbsp; October 2025, Boston, MA</div>
+            </div>
+            <div class="conf-year">2025</div>
+          </div>
+
+          <!-- ICIBM 2025 -->
+          <div class="conf-item">
+            <div class="conf-icon">💡</div>
+            <div class="conf-body">
+              <div class="conf-type">🎙️ Oral Presentation</div>
+              <div class="conf-title">A network-based systems genetics framework identifies pathobiology and drug repurposing in Parkinson's disease</div>
+              <div class="conf-venue">International Conference on Intelligent Biology and Medicine (ICIBM 2025) &nbsp;·&nbsp; August 2025, Columbus, OH</div>
+            </div>
+            <div class="conf-year">2025</div>
+          </div>
+
+          <!-- AAIC 2024 -->
+          <div class="conf-item">
+            <div class="conf-icon">🧠</div>
+            <div class="conf-body">
+              <div class="conf-type">🎙️ Oral Presentation</div>
+              <div class="conf-title">A network-based systems genetics framework identifies pathobiology and drug repurposing in Parkinson's disease</div>
+              <div class="conf-venue">Alzheimer's Association International Conference (AAIC) &nbsp;·&nbsp; July 2024, Philadelphia, PA</div>
+            </div>
+            <div class="conf-year">2024</div>
+          </div>
+
+          <!-- CSHL 2023 -->
+          <div class="conf-item">
+            <div class="conf-icon">◎</div>
+            <div class="conf-body">
+              <div class="conf-type">📌 Poster Presentation</div>
+              <div class="conf-title">A deep learning-based deconvolution framework identifies human brain cell-type specific eQTLs in Alzheimer's disease</div>
+              <div class="conf-venue">Systems Biology — Cold Spring Harbor Laboratory (CSHL) &nbsp;·&nbsp; 2023, Cold Spring Harbor, NY</div>
+            </div>
+            <div class="conf-year">2023</div>
+          </div>
+
+        </div>
+      </div>
+
+    </main>
+  </div><!-- /.body -->
+
+  <div class="footer">
+    🧬 Lijun Dou &nbsp;·&nbsp; Genomic Sciences &amp; Systems Biology, Cleveland Clinic Research &nbsp;·&nbsp;
+    <a href="https://github.com/doulijun777">github.com/doulijun777</a> &nbsp;·&nbsp;
+    <a href="https://scholar.google.com/citations?user=hI5Ne60AAAAJ">Google Scholar</a>
+  </div>
+
+</div>
 </body>
 </html>
-
